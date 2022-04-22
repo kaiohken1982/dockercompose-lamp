@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  php81:
+    image: docker-locale/php81
+    command: bash -c "/etc/init.d/php8.1-fpm start && tail -F /dev/null"
+    volumes:
+      - php-services:/srv/
+    networks: 
+      - dockerlocale
+  nodenvm:
+    image: docker-locale/nvm
+    command: bash -c "tail -F /dev/null"
+    volumes:
+      - php-services:/srv/
+    networks: 
+      - dockerlocale
+  apache:
+    image: docker-locale/apache
+    command: bash -c "/etc/init.d/apache2 start && tail -F /dev/null"
+    ports:
+      - 8181:80
+    volumes:
+      - php-services:/srv/
+    networks: 
+      - dockerlocale
+
+networks:
+  dockerlocale:
+    external: true
+    name: dockerlocale
+volumes:
+  php-services:
+    external: true
+    name: php-services
